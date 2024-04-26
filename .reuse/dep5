@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: so2-arthurvergacas
+Upstream-Contact: Arthur Vergaças <arthurvdm@gmail.com>
+Source: https://github.com/courselab/so2-arthurvergacas.git
+
+Files: */.dist
+Copyright: Arthur Vergaças <arthurvdm@gmail.com>
+License: CC0-1.0
+
