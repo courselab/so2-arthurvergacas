@@ -1,3 +1,15 @@
 #    SPDX-FileCopyrightText: 2024 Arthur Vergaças <arthurvdm@gmail.com>
-#   
+#
 #    SPDX-License-Identifier: GPL-3.0-or-later
+
+# d) Compare 'hw.bin' with 'eg.bin'. Do the outputs match? (They don't necessarily have too).
+
+O output do comando `diff hw.bin path/eg-00.bin` é vazio - ou seja, os arquivos são identicos e, portanto, para este arquivo, `hwasm` se comporta da mesma forma que os assemblers `nasm` ou `as`.
+
+e) Disassemble 'hw.bin' and compare the result with 'hw.S'. Does the output (at least approximately) matches 'hw.S'?
+
+Com a exceção da ausência de labels e diretivas, e da interpretação incorreta dos bytes de fill ou dos bytes de assinatura para o boot, os resultados são equivalentes.
+
+f) Boot 'hw.bin' using the 'qemu' emulator. Does it work?
+
+Sim, o qemu é executado corretamente, exibindo 'Hello World'.

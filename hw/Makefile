@@ -13,17 +13,14 @@
 
 all: hw.bin
 
-hw.bin : hw.S hwasm
-	./hwasm hw.S hw.bin
-
-hwasm : hwasm.c
-	gcc -Wall --ansi hwasm.c -o hwasm
+hw.bin : hw.S
+	python3 hwasm.py hw.S hw.bin
 
 hw2.bin: hw2.o
-	ld -melf_i386 --oformat=binary -Ttext=0x7c00 hw2.o -o h2.bin
+	ld -melf_i386 --oformat=binary -Ttext=0x7c00 hw2.o -o hw2.bin
 
 hw2.o: hw.S
-	as --32 hw.S -o hw.o
+	as --32 hw.S -o hw2.o
 
 
 .PHONY: clean
