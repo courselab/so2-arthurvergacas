@@ -18,7 +18,7 @@
 char buffer[SIZE]; /* Read buffer.      */
 
 void add_1(int n) {
-  if (n <= 0 || n >= 10) {
+  if (n < 0 || n >= 9) {
     println("I can't :(");
     return;
   }
