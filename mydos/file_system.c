@@ -16,7 +16,7 @@ struct fs_header_t *get_fs_header() {
   return (struct fs_header_t *)0x7c00;
 }
 
-void load_disk_into_memory(byte sector_coordinate, byte sectors_to_read, void *target_addres) {
+void load_disk_into_memory(int sector_coordinate, int sectors_to_read, void *target_addres) {
   __asm__ volatile(
       "pusha \n"
       "mov boot_drive, %%dl \n"    /* Select the boot drive (from rt0.o). */

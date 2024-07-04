@@ -89,7 +89,8 @@ void f_help() {
   kwrite("...me, Obi-Wan, you're my only hope!\n\n");
   kwrite("   But we can try also some commands:\n");
   kwrite("      exec    (to execute an user program example\n");
-  kwrite("      quit    (to exit TyDOS)\n");
+  kwrite("      list    (to list files in ArjuDOS)\n");
+  kwrite("      quit    (to exit ArjuDOS)\n");
 }
 
 void f_quit() {
@@ -100,10 +101,10 @@ void f_quit() {
 void f_list() {
   struct fs_header_t *fs_header = get_fs_header();
 
-  byte sector_coordinate = 1 + fs_header->number_of_boot_sectors;
-  byte sectors_to_read = fs_header->number_of_file_entries * DIR_ENTRY_LEN / 512;
+  int sector_coordinate = 1 + fs_header->number_of_boot_sectors;
+  int sectors_to_read = fs_header->number_of_file_entries * DIR_ENTRY_LEN / SECTOR_SIZE;
 
-  extern int _MEM_POOL;
+  extern byte _MEM_POOL;
   void *directory_section = (void *)&_MEM_POOL;
 
   load_disk_into_memory(sector_coordinate, sectors_to_read, directory_section);
@@ -117,21 +118,47 @@ void f_list() {
   }
 }
 
-/* Built-in shell command: example.
-
-   Execute an example user program which invokes a syscall.
-
-   The example program (built from the source 'prog.c') is statically linked
-   to the kernel by the linker script (tydos.ld). In order to extend the
-   example, and load and external C program, edit 'f_exec' and 'prog.c' choosing
-   a different name for the entry function, such that it does not conflict with
-   the 'main' function of the external program.  Even better: remove 'f_exec'
-   entirely, and suppress the 'example_program' section from the tydos.ld, and
-   edit the Makefile not to include 'prog.o' and 'libtydos.o' from 'tydos.bin'.
-
-  */
-
-// extern int main();
 void f_exec() {
-  // main();			/* Call the user program's 'main' function. */
+  char *binary_file_name = "prog.bin";
+
+  // achar o binario do cara
+  struct fs_header_t *fs_header = get_fs_header();
+
+  int directory_sector_coordinate = 1 + fs_header->number_of_boot_sectors;
+  int sectors_to_read = fs_header->number_of_file_entries * DIR_ENTRY_LEN / SECTOR_SIZE + 1;
+
+  int memoryOffset = fs_header->number_of_file_entries * DIR_ENTRY_LEN - (sectors_to_read - 1) * 512;
+
+  extern byte _MEM_POOL;
+  void *directory_section = (void *)&_MEM_POOL;
+
+  load_disk_into_memory(directory_sector_coordinate, sectors_to_read, directory_section);
+
+  int bin_sector_coordinate;
+  for (int i = 0; i < fs_header->number_of_file_entries; i++) {
+    char *file_name = directory_section + i * DIR_ENTRY_LEN;
+    if (!strcmp(file_name, binary_file_name)) {
+      // executar esse cara
+      bin_sector_coordinate = directory_sector_coordinate + sectors_to_read + fs_header->max_file_size * i - 1;
+      break;
+    }
+  }
+
+  void *program = (void *)(0xFE00 - memoryOffset);
+
+  load_disk_into_memory(bin_sector_coordinate, fs_header->max_file_size, program);
+
+  __asm__(
+      "jmp %[prog] \n" ::[prog] "g"(program));
+
+  __asm__(
+      "call get_ip_into_ax \n"  // coloca o return address em ax
+
+      "push %ax \n"  // colocar o ax na stack
+
+      "jmp $0xFE00 \n"  // jump pra main
+
+      "get_ip_into_ax: \n"
+      "  mov (%sp), %ax \n"
+      "  ret \n");
 }

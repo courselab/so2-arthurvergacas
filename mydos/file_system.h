@@ -15,6 +15,7 @@
 
 #define FS_SIGLEN 4      /* Signature length.                        */
 #define DIR_ENTRY_LEN 32 /* Max file name length in bytes.           */
+#define SECTOR_SIZE 512
 
 /* The file header. */
 
@@ -29,6 +30,6 @@ struct fs_header_t {
 
 struct fs_header_t *get_fs_header();
 
-void load_disk_into_memory(byte sector_coordinate, byte sectors_to_read, void *target_addres);
+void load_disk_into_memory(int sector_coordinate, int sectors_to_read, void *target_addres);
 
 #endif /* KFILE_SYSTEM_H  */
