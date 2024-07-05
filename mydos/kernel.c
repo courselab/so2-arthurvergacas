@@ -144,21 +144,37 @@ void f_exec() {
     }
   }
 
-  void *program = (void *)(0xFE00 - memoryOffset);
+  void *program = (void *)(0xFE00);
+  void *program_sector_start = program - memoryOffset;
 
-  load_disk_into_memory(bin_sector_coordinate, fs_header->max_file_size, program);
-
-  __asm__(
-      "jmp %[prog] \n" ::[prog] "g"(program));
+  load_disk_into_memory(bin_sector_coordinate, fs_header->max_file_size, program_sector_start);
 
   __asm__(
-      "call get_ip_into_ax \n"  // coloca o return address em ax
+      // "oi_message: .string \"oi \" \n"
+      // "call get_ip_into_ax \n"  // coloca o return address em ax
+
+      // "push %%cx \n"
+      // "push %%ax \n"
+      // "lea oi_message, %%cx \n"
+      // "call kwrite \n"
+      // "pop %%ax \n"
+      // "pop %%cx \n"
+
+      // "mov $finish, %ax \n"
 
       "push %ax \n"  // colocar o ax na stack
 
-      "jmp $0xFE00 \n"  // jump pra main
+      "mov $0xFE00, %bx \n"
+      "jmp *%bx \n"  // jump pra main
 
-      "get_ip_into_ax: \n"
-      "  mov (%sp), %ax \n"
-      "  ret \n");
+      // "finish: \n"
+
+      // "get_ip_into_ax: \n"
+      // "  mov %sp, %bp \n"
+      // "  mov (%bp), %ax \n"
+      // "  add $0x5, %ax \n"
+      // "  ret \n"
+  );
+
+  kwrite("ue\n");
 }
