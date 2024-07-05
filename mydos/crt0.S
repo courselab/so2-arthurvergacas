@@ -14,3 +14,4 @@
 	jmp _start
 _start:
   call main
+	ret

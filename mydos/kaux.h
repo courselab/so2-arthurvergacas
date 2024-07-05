@@ -21,6 +21,8 @@ typedef char byte;
 #define LEFT 0            /* First column (left of the screen).    */
 #define RIGHT (COLS - 1)  /* Last column (right of the screen).    */
 
+#define USER_PROGRAM_START_ADDR 0xFE00
+
 extern char character_color; /* Default fore/background char color.   */
 
 void splash(void); /* Draw the splash screen.               */
