@@ -15,7 +15,7 @@
            by the bootloader (so as to respect the 512-byte length limit).*/
 
 	.code16gcc
-	.global kread, udelay, register_syscall_handler, sys_write
+	.global kread, udelay, register_syscall_handler, sys_write, sys_read
 
 	.section .text
 
@@ -55,9 +55,9 @@ kread_end:
 
         movb $0x0, -1(%bx,%si)  /* Remove trailing CR.                        */
 
-	mov %esi, %eax		/* Update %ax in the stack (see note 2)       */
-	dec %eax		/* so that popa gets the computed value.      */
-	mov %eax, 28(%esp)
+				mov %esi, %eax		/* Update %ax in the stack (see note 2)       */
+				dec %eax		/* so that popa gets the computed value.      */
+				mov %eax, 28(%esp)
 
         popa                    /* Restore all GP registers.                  */
         ret
@@ -122,6 +122,7 @@ syscall_table:
 	.long sys_invalid	/* Syscall 0: invalid.   */
 	.long sys_exit		/* Syscall 1: exit.      */
 	.long sys_write		/* Syscall 2: write      */
+	.long sys_read		/* Syscall 3: read       */
 
 	/* Read-only data. */
 

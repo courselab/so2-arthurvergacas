@@ -1,7 +1,7 @@
 /*
  *    SPDX-FileCopyrightText: 2024 Arthur Vergaças <arthurvdm@gmail.com>
  *    SPDX-FileCopyrightText: 2024 Monaco F. J. <monaco@usp.br>
- *   
+ *
  *    SPDX-License-Identifier: GPL-3.0-or-later
  *
  *  This file is a derivative work from SYSeg (https://gitlab.com/monaco/syseg)
@@ -25,6 +25,11 @@
 int _tycall_ sys_write(const char* str)
 {
   kwrite (str);
+  return 0;
+}
+
+int _tycall_ sys_read(char* buffer) {
+  kread(buffer);
   return 0;
 }
 

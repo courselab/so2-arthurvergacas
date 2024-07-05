@@ -10,8 +10,14 @@
 
 #include "tydos.h"
 
-int main()
-{
-  puts ("Hello World\n");
+int main() {
+  char name[GETS_BUFFER_MAX_SIZE];
+  puts("What's your name? ");
+  gets(name);
+
+  puts("Hello ");
+  puts(name);
+  puts("\n");
+
   return 0;
 }
