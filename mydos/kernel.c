@@ -156,6 +156,8 @@ void f_exec() {
 
   load_disk_into_memory(bin_sector_coordinate, fs_header->max_file_size, program_sector_start);
 
+  // kwrite(num_to_string(*(int *)program));
+
   __asm__ volatile(
       "  call get_return_addr_into_ebx \n"  // coloca o return address em ebx
 
