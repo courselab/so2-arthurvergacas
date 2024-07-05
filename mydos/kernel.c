@@ -119,7 +119,10 @@ void f_list() {
 }
 
 void f_exec() {
-  char *binary_file_name = "prog.bin";
+  char binary_file_name[BUFF_SIZE];
+
+  kwrite("Input the name of the program you want to execute: ");
+  kread(binary_file_name);
 
   // achar o binario do cara
   struct fs_header_t *fs_header = get_fs_header();
@@ -134,7 +137,7 @@ void f_exec() {
 
   load_disk_into_memory(directory_sector_coordinate, sectors_to_read, directory_section);
 
-  int bin_sector_coordinate;
+  int bin_sector_coordinate = -1;
   for (int i = 0; i < fs_header->number_of_file_entries; i++) {
     char *file_name = directory_section + i * DIR_ENTRY_LEN;
     if (!strcmp(file_name, binary_file_name)) {
@@ -143,22 +146,35 @@ void f_exec() {
     }
   }
 
+  if (bin_sector_coordinate == -1) {
+    kwrite("Program not found.\n");
+    return;
+  }
+
   void *program = (void *)(USER_PROGRAM_START_ADDR);
   void *program_sector_start = program - memoryOffset;
 
   load_disk_into_memory(bin_sector_coordinate, fs_header->max_file_size, program_sector_start);
 
   __asm__ volatile(
-      "call get_return_addr_into_ebx \n"  // coloca o return address em ebx
+      "  call get_return_addr_into_ebx \n"  // coloca o return address em ebx
 
-      "push %%ebx \n"  // colocar o ebx na stack
+      "original_return_addr: \n"  // será usado para calcular o valor que deve ser adicionado à stack
 
-      "jmp *%[progAddr] \n"  // jump pra main
+      "  push %%ebx \n"  // colocar o ebx na stack
+
+      "  jmp *%[progAddr] \n"  // jump pra main
 
       "get_return_addr_into_ebx: \n"
       "  mov (%%esp), %%ebx \n"  // coloca o topo da stack em ebx
-      "  add $17, %%ebx \n"      // soma 17 pq são 17 bytes entre o push do ebx na stack até o retorno da f_exec
+
+      "  mov $prog_finish, %%ecx \n"           // ecx = endereço de prog_finish
+      "  sub $original_return_addr, %%ecx \n"  // ecx -= endereço de original_return_addr
+
+      "  add %%ecx, %%ebx \n"  // soma ecx em ebx, ou seja, faz com que ebx aponte para prog_finish
       "  ret \n"
+
+      "prog_finish:"
 
       ::[progAddr] "r"(program));
 }
