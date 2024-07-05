@@ -1,12 +1,14 @@
 /*
  *    SPDX-FileCopyrightText: 2021 Monaco F. J. <monaco@usp.br>
- *    SPDX-FileCopyrightText: 2024 Arthur Vergaças <arthurvdm@gmail.com>
+ *    SPDX-FileCopyrightText: 2024 Arthur Vergaças <arthur.vergacas@usp.br>
+ *    SPDX-FileCopyrightText: 2024 Maria Júlia De Grandi <maju.degrandi@usp.br>
  *
  *    SPDX-License-Identifier: GPL-3.0-or-later
  *
  *  This file is a derivative work from SYSeg (https://gitlab.com/monaco/syseg)
  *  and contains modifications carried out by the following author(s):
- *  Arthur Vergaças <arthurvdm@gmail.com>
+ *  Arthur Vergaças <arthur.vergacas@usp.br>
+ *  Maria Júlia De Grandi <maju.degrandi@usp.br>
  */
 
 /* This source file implements the kernel entry function 'kmain' called
@@ -24,7 +26,7 @@
 void kmain(void) {
   register_syscall_handler(); /* Register syscall handler at int 0x21.*/
 
-  // splash(); /* Uncessary spash screen.              */
+  splash(); /* Uncessary spash screen.              */
 
   shell(); /* Invoke the command-line interpreter. */
 
