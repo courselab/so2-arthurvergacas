@@ -2,3 +2,14 @@
  *    SPDX-FileCopyrightText: 2024 Maria Júlia De Grandi <maju.degrandi@usp.br>
 #
 #    SPDX-License-Identifier: GPL-3.0-or-later
+
+EVALUATION
+==========
+
+Way to go!!! Nailed it.
+
+Well, the idea was that if the user simply enter 'hello.bin' at the shell prompt, the shell
+would understand that it should load and execute 'hello.bin'. Rather, your implementation
+requires that the user enter the build command 'exec'. Not exactly what was specified but
+that's ok. What really matters is that the implementation is very good.
+
